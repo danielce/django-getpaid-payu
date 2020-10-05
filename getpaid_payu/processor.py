@@ -105,6 +105,8 @@ class PaymentProcessor(BaseProcessor):
             "currency": self.payment.currency,
             "amount": self.payment.amount_required,
             "products": products,
+            "buyer": self.payment.get_buyer_info(),
+            "continueUrl": self.payment.order.get_success_url(request=request),
         }
         if self.get_setting("confirmation_method", self.confirmation_method) == "PUSH":
             context["notify_url"] = urljoin(
