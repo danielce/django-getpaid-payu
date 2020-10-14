@@ -12,6 +12,8 @@ from collections import OrderedDict
 from urllib.parse import urljoin
 
 from django import http
+from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.db.transaction import atomic
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
@@ -50,7 +52,8 @@ class PaymentProcessor(BaseProcessor):
     def get_our_baseurl(self, request=None):
         if request is None:
             return "http://127.0.0.1/"
-        return super().get_our_baseurl(request)
+        scheme = getattr(settings, 'SITE_PROTOCOL', 'https')
+        return f"{scheme}://{get_current_site(request).domain}/"
 
     def get_client_params(self) -> dict:
         return {
